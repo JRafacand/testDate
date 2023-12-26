@@ -9,15 +9,15 @@ import net.thucydides.core.annotations.Screenshots;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.WebElement;
 import starter.navigation.navigateTo;
-
+import org.openqa.selenium.JavascriptExecutor;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.Map;
+
 
 import static net.serenitybdd.core.Serenity.getDriver;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -44,7 +44,6 @@ public class opcClickSteps {
     @SneakyThrows
     @Screenshots(forEachAction = true)
     private void seleccionarProducto(String productName) throws InterruptedException {
-        WebDriver driver1 = new ChromeDriver();
         // Realizar clic en el objeto deseado
         if (productName.contains("Apple Cinema 30")) {
             driver.findElement(By.xpath("//a[contains(text(),'" + productName + "')]")).click();
@@ -76,8 +75,41 @@ public class opcClickSteps {
             Thread.sleep(1000);
             WebElement inputDate = driver.findElement(By.xpath("//input[@id='input-option219']"));
             String date = "2023-12-30";
-            ((ChromeDriver) driver1).executeScript ("arguments[0].setAttribute('value', '" + date + "')", inputDate);
-            driver.quit();
+            ((JavascriptExecutor) driver).executeScript ("arguments[0].setAttribute('value', '" + date + "')", inputDate);
+            WebElement inputTime = driver.findElement(By.xpath("//input[@id='input-option221']"));
+            String time = "9:37";
+            ((JavascriptExecutor) driver).executeScript ("arguments[0].setAttribute('value', '" + time + "')", inputTime);
+            WebElement inputDateTime = driver.findElement(By.xpath("//input[@id='input-option220']"));
+            String dateTime = "2023-12-30 9:37";
+            ((JavascriptExecutor) driver).executeScript ("arguments[0].setAttribute('value', '" + dateTime + "')", inputDateTime);
+            WebElement inputQty = driver.findElement(By.xpath("//input[@id='input-quantity']"));
+            String qTy = "2";
+            ((JavascriptExecutor) driver).executeScript ("arguments[0].setAttribute('value', '" + qTy + "')", inputQty);
+            assertThat(qTy).isEqualTo("2");
+            Thread.sleep(1000);
+            driver.findElement(By.xpath("//button[@id='button-cart']")).click();
+            Thread.sleep(1000);
+            WebElement campo = driver.findElement(By.cssSelector("body:nth-child(2) div.container:nth-child(5) > div.alert.alert-success.alert-dismissible"));
+            String tProd = campo.getText();
+            String tProd2 = "Success: You have added " + productName + " to your shopping cart!";
+            assertThat(tProd).contains(tProd2);
+            Thread.sleep(1000);
+            driver.findElement(By.xpath("//a[contains(text(),'Your Store')]")).click();
+          } else if (productName.contains("Canon EOS 5D")) {
+            driver.findElement(By.xpath("//a[contains(text(),'" + productName + "')]")).click();
+            WebElement selectDrop = driver.findElement(By.xpath("//select[@id='input-option226']"));
+            Select dropDown = new Select(selectDrop);
+            dropDown.selectByIndex(2);
+            driver.findElement(By.xpath("//button[@id='button-cart']")).click();
+            WebElement campo = driver.findElement(By.cssSelector("body:nth-child(2) div.container:nth-child(4) > div.alert.alert-success.alert-dismissible"));
+            String tMac = campo.getText();
+            String tMac2 = "Success: You have added " + productName + " to your shopping cart!";
+            assertThat(tMac).contains(tMac2);
+            Thread.sleep(1000);
+            driver.findElement(By.xpath("//span[contains(text(),'Shopping Cart')]")).click();
+            driver.findElement(By.xpath("//a[contains(text(),'Checkout')]")).click();
+            //driver.findElement(By.xpath("//a[contains(text(),'Your Store')]")).click();
+
         } else {
             driver.findElement(By.xpath("//a[contains(text(),'" + productName + "')]")).click();
             driver.findElement(By.xpath("//button[@id='button-cart']")).click();
@@ -87,7 +119,6 @@ public class opcClickSteps {
             assertThat(tMac).contains(tMac2);
             Thread.sleep(1000);
             driver.findElement(By.xpath("//a[contains(text(),'Your Store')]")).click();
-
         }
     }
 }
