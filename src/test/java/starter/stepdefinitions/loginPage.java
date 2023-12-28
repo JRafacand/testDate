@@ -19,32 +19,11 @@ import static net.serenitybdd.core.Serenity.getDriver;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class loginPage {
-    @Given("{actor} I navigate to login page")
+    @Given("{actor} I navigate to opencart")
     public void clickThings(Actor actor) {actor.wasAbleTo(navigateTo.theOpencart());}
     private WebDriver driver;
     public loginPage() {this.driver = getDriver();}
 
-    @And("{actor} usuario ingresa las credenciales")
-    public void mapUP(Actor actor, DataTable dateUser) throws InterruptedException {
-        List<Map<String, String>> data = dateUser.asMaps(String.class, String.class);
-        for (Map<String, String> row : data) {
-            String user = row.get("Usuario");
-            String pass = row.get("Password");
-            System.out.println("Usuario: " + user);
-            System.out.println("Contraseña: " + pass);
-            Thread.sleep(3000);
-            loginUser(user, pass);
-        }
-    }
-   public void loginUser (String enteredUser, String enteredPass) throws InterruptedException {
-        driver.findElement(By.xpath("//span[contains(text(),'My Account')]")).click();
-        Thread.sleep(1000);
-        driver.findElement(By.xpath("//a[contains(text(),'Login')]")).click();
-        driver.findElement(By.xpath("//input[@id='input-email']")).sendKeys(enteredUser);
-        driver.findElement(By.xpath("//input[@id='input-password']")).sendKeys(enteredPass);
-        driver.findElement(By.xpath("//body/div[@id='account-login']/div[1]/div[1]/div[1]/div[2]/div[1]/form[1]/input[1]")).click();
-        Thread.sleep(1000);
-   }
     @And("{actor} I select a products")
     @Screenshots(forEachAction = true)
     public void clickOnProducts(Actor actor, List<Map<String, String>> products) throws InterruptedException, AWTException {
@@ -55,6 +34,7 @@ public class loginPage {
     }
     private void seleccionarProducto(String productName) throws InterruptedException, AWTException {
         // Realizar clic en el objeto deseado
+        driver.findElement(By.xpath("//a[contains(text(),'Your Store')]")).click();
         if (productName.contains("Apple Cinema 30")) {
             driver.findElement(By.xpath("//a[contains(text(),'" + productName + "')]")).click();
             driver.findElement(By.xpath("//button[@id='button-cart']")).click();
@@ -129,6 +109,50 @@ public class loginPage {
             assertThat(tMac).contains(tMac2);
             Thread.sleep(1000);
             driver.findElement(By.xpath("//a[contains(text(),'Your Store')]")).click();
+        }
+    }
+    @And("{actor} usuario ingresa las credenciales")
+    public void mapUP(Actor actor, DataTable dateUser) throws InterruptedException {
+        List<Map<String, String>> data = dateUser.asMaps(String.class, String.class);
+        for (Map<String, String> row : data) {
+            String user = row.get("Usuario");
+            String pass = row.get("Password");
+            System.out.println("Usuario: " + user);
+            System.out.println("Contraseña: " + pass);
+            Thread.sleep(3000);
+            loginUser(user, pass);
+        }
+    }
+   public void loginUser (String enteredUser, String enteredPass) throws InterruptedException {
+        driver.findElement(By.xpath("//span[contains(text(),'My Account')]")).click();
+        Thread.sleep(1000);
+        driver.findElement(By.xpath("//a[contains(text(),'Login')]")).click();
+        driver.findElement(By.xpath("//input[@id='input-email']")).sendKeys(enteredUser);
+        driver.findElement(By.xpath("//input[@id='input-password']")).sendKeys(enteredPass);
+        driver.findElement(By.xpath("//body/div[@id='account-login']/div[1]/div[1]/div[1]/div[2]/div[1]/form[1]/input[1]")).click();
+        Thread.sleep(1000);
+   }
+   @And("{actor} eliminar productos outstcock")
+    public void deleteItems(Actor actor) throws InterruptedException {
+        driver.findElement(By.xpath("//span[@id='cart-total']")).click();
+        Thread.sleep(1000);
+        driver.findElement(By.xpath("//body[1]/header[1]/div[1]/div[1]/div[3]/div[1]/ul[1]/li[2]/div[1]/p[1]/a[1]/strong[1]")).click();
+        WebElement table = driver.findElement(By.cssSelector("div.container:nth-child(4) div.row div.col-sm-12 form:nth-child(2) > div.table-responsive"));
+        List<WebElement> fIlas = table.findElements(By.tagName("tr"));
+        for (int f = 1; f < fIlas.size(); f++) {
+            System.out.println("Entré al bucle for");
+            WebElement fila = fIlas.get(f);
+            List<WebElement> columnas = fila.findElements(By.tagName("td"));
+            //System.out.println("Entré al Columnas" + columnas.size());
+            WebElement columna = columnas.get(2);
+            System.out.println("Entré al Columna" + columna.getCssValue("text-danger"));
+            if (columna.getText().contains("***")) {
+                System.out.println("Entré al bucle If");
+                WebElement columna2 = columnas.get(4);
+                Thread.sleep(5000);
+                columna2.findElement(By.xpath("//tbody/tr['" + f + "']/td[4]/div[1]/span[1]/button[2]/i[1]")).click();
+                Thread.sleep(2000);
+            }
         }
     }
 }

@@ -1,19 +1,16 @@
 Feature: Elegir Productos Opencart
 
   Scenario: Login Opencart
-    Given User I navigate to login page
-     And he usuario ingresa las credenciales
-      |Usuario                |Password|
-      |pruebadata@hotmail.com |prueba123|
+    Given User I navigate to opencart
     And he I select a products
       |products|
       |MacBook|
       |iPhone|
       |Apple Cinema 30"|
       |Canon EOS 5D|
-
-  Scenario: Eliminar productos outstcock
-    Given User abrir carrito de compras
+    And he usuario ingresa las credenciales
+      |Usuario                |Password|
+      |pruebadata@hotmail.com |prueba123|
     And he eliminar productos outstcock
 
 
