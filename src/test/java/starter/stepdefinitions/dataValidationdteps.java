@@ -23,7 +23,7 @@ public class dataValidationdteps {
     }
     @Given("{actor} I navigate to Opencart")
     public void clickorder(Actor actor) throws InterruptedException {
-        actor.wasAbleTo(navigateTo.navigateToCartPage.theCartPage());
+        actor.wasAbleTo(navigateTo.navigateTocartpage.theCartPage());
         Thread.sleep(2000);
         //driver1.findElement(By.xpath("//button[contains(text(),'Place Order')]")).click();
     }

@@ -1,14 +1,24 @@
 Feature: Elegir Productos Opencart
 
-  Scenario: Elegir Productos Opencart
-    Given User I navigate to Opencart
+  Scenario: Login Opencart
+    Given User I navigate to login page
+     And he usuario ingresa las credenciales
+      |Usuario                |Password|
+      |pruebadata@hotmail.com |prueba123|
     And he I select a products
       |products|
       |MacBook|
       |iPhone|
       |Apple Cinema 30"|
       |Canon EOS 5D|
-   #Scenario: Validar datos y comprar
+
+  Scenario: Eliminar productos outstcock
+    Given User abrir carrito de compras
+    And he eliminar productos outstcock
+
+
+
+
    # Given User I navigate to demoblaze compra
     #Then he Valido el campo "Juan Perez"
     #Then he Valido ingreso country "Ecuador Sudamerica"
