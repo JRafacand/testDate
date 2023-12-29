@@ -12,17 +12,13 @@ Feature: Elegir Productos Opencart
       |Usuario                |Password|
       |pruebadata@hotmail.com |prueba123|
     And he eliminar productos outstcock
-
-
-
-
-   # Given User I navigate to demoblaze compra
-    #Then he Valido el campo "Juan Perez"
-    #Then he Valido ingreso country "Ecuador Sudamerica"
-    #Then he Valido ingreso city "Quito"
-    #Then he valido ingreso tarjeta "9876-5432-1098-7654"
-    #Then he Ingreso Mes
-    #Then he Valido anio 2023
-    #Then he Finalizar Compra
-    #Then he navigate demoblaze back
+    And he checkout
+    Then he Valido el campo nobre "Juan"
+    Then he Valido ingreso country "Ecuador Sudamerica"
+    Then he Valido ingreso city "Quito"
+    Then he valido ingreso tarjeta "9876-5432-1098-7654"
+    Then he Ingreso Mes
+    Then he Valido anio 2023
+    Then he Finalizar Compra
+    Then he navigate demoblaze back
 
