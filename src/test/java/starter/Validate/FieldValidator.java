@@ -1,11 +1,12 @@
 package starter.Validate;
 
 import net.serenitybdd.core.Serenity;
+import org.codehaus.groovy.runtime.StringGroovyMethods;
 import org.openqa.selenium.WebElement;
 
 public class FieldValidator {
 
-    public void validateName(WebElement campo, String enteredValue) {
+    public void validatetext(WebElement campo, String enteredValue) {
         campo.sendKeys(enteredValue);
         String valorIngresado = campo.getAttribute("value");
         if (ValidationUtils.validateName(valorIngresado)) {
@@ -13,6 +14,17 @@ public class FieldValidator {
             throw new AssertionError("El campo debe contener solo letras.");
         } else {
             Serenity.recordReportData().withTitle("Validación de campo").andContents("El campo contiene letras.");
+        }
+    }
+
+    public void validateCp(WebElement campo, int enteredCp) {
+        campo.sendKeys(String.valueOf(enteredCp));
+        String valorIngresado = campo.getAttribute("value");
+        if (!ValidationUtils.validateNum(Integer.parseInt(valorIngresado))) {
+            Serenity.recordReportData().withTitle("Validación de campo").andContents("El campo debe contener solo Numeros.");
+            throw new AssertionError("El campo debe contener solo letras.");
+        } else {
+            Serenity.recordReportData().withTitle("Validación de campo").andContents("El campo contiene Numeros.");
         }
     }
 
@@ -30,6 +42,10 @@ public class FieldValidator {
     public static class ValidationUtils {
         public static boolean validateName(String name) {
             return name.matches("^[A-Za-z]+$^[A-Za-z]+$");
+        }
+        public static boolean validateNum(Integer number) {
+            String numberStr = String.valueOf(number);
+            return numberStr.matches("^[0-9]+$");
         }
     }
 

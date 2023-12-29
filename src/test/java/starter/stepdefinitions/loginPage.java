@@ -15,6 +15,7 @@ import starter.navigation.navigateTo;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
+import java.security.PublicKey;
 import java.util.List;
 import java.util.Map;
 
@@ -129,9 +130,7 @@ public class loginPage {
         for (Map<String, String> row : data) {
             String user = row.get("Usuario");
             String pass = row.get("Password");
-            System.out.println("Usuario: " + user);
-            System.out.println("Contraseña: " + pass);
-            Thread.sleep(3000);
+            Thread.sleep(1000);
             loginUser(user, pass);
         }
     }
@@ -160,10 +159,10 @@ public class loginPage {
             String outStock = columna.getText();
             if (outStock.contains("***")) {
                 System.out.println("Size antes: " + fIlas.size());
-                Thread.sleep(2000);
+                Thread.sleep(1000);
                 String delete = "//tbody/tr[" + f + "]/td[4]/div[1]/span[1]/button[2]";
                 driver.findElement(By.xpath(delete)).click();
-                Thread.sleep(2000);
+                Thread.sleep(1000);
                 fIlas = getTableRows();
                 System.out.println("Size después: " + fIlas.size());
                 f = 0;
@@ -183,60 +182,79 @@ public class loginPage {
 
     }
 
-    @Then("{actor} Valido el campo {string}")
+    @Then("{actor} Valido el campo nombre {string}")
     public void validateName(Actor actor, String enteredValue) {
         WebElement campo = driver.findElement(By.xpath("//input[@id='input-payment-firstname']"));
-        fieldValidator.validateName(campo, enteredValue);
+        fieldValidator.validatetext(campo, enteredValue);
     }
 
-    @Then("{actor} Valido ingreso country {string}")
+    @Then("{actor} Valido el campo apellido {string}")
     public void validateCountry(Actor actor, String enteredValue) {
-        WebElement campo = driver.findElement(By.xpath("//input[@id='country']"));
-        fieldValidator.validateName(campo, enteredValue);
+        WebElement campo = driver.findElement(By.xpath("//input[@id='input-payment-lastname']"));
+        fieldValidator.validatetext(campo, enteredValue);
+    }
+
+    @Then("{actor} ingreso company {string}")
+    public void ingresocompany(Actor actor, String enteredValue) {
+        WebElement campo = driver.findElement(By.xpath("//input[@id='input-payment-company']"));
+        fieldValidator.validatetext(campo, enteredValue);
+    }
+
+    @Then("{actor} ingreso address 1 {string} address 2 {string}")
+    public void ingresoaddress(Actor actor, String enteredValue, String enteredValue2) {
+        driver.findElement(By.xpath("//input[@id='input-payment-address-1']")).sendKeys(enteredValue);
+        driver.findElement(By.xpath("//input[@id='input-payment-address-2']")).sendKeys(enteredValue2);
+
     }
 
     @Then("{actor} Valido ingreso city {string}")
     public void validateCity(Actor actor, String enteredValue) {
-        WebElement campo = driver.findElement(By.xpath("//input[@id='city']"));
-        fieldValidator.validateName(campo, enteredValue);
+        WebElement campo = driver.findElement(By.xpath("//input[@id='input-payment-city']"));
+        fieldValidator.validatetext(campo, enteredValue);
     }
 
-    @Then("{actor} valido ingreso tarjeta {string}")
-    public void validateCredit(Actor actor, String enteredValue) {
-        WebElement campo = driver.findElement(By.xpath("//input[@id='card']"));
-        fieldValidator.validateCredit(campo, enteredValue);
+    @Then("{actor} Valido ingreso codigo postal {int}")
+    public void validatecp(Actor actor, int enteredCp) {
+        WebElement campo = driver.findElement(By.xpath("//input[@id='input-payment-postcode']"));
+        fieldValidator.validateCp(campo, enteredCp);
     }
 
-    @Then("{actor} Ingreso Mes")
-    public void validateMounth(Actor actor) {
-        driver.findElement(By.xpath("//input[@id='month']")).sendKeys("Abril");
-
-    }
-
-    @Then("{actor} Valido anio {int}")
-    public void ingresoValorEnCampoAnio(Actor actor, int valor) {
-        driver.findElement(By.xpath("//input[@id='year']")).sendKeys(Integer.toString(valor));
-        if (fieldValidator.esAnioValido(valor)) {
-            Serenity.recordReportData().withTitle("Validación de campo").andContents("El campo contiene un Años Válido.");
-        } else {
-            Serenity.recordReportData().withTitle("Validación de campo").andContents("El campo no es un Año válido.");
-            throw new AssertionError("El campo no es un Año válido.");
-        }
-    }
-    // Método para validar si un año es válido (por ejemplo, entre 2010 y 2100)
-
-    @Then("{actor} Finalizar Compra")
-    public void endBuy(Actor actor) throws InterruptedException {
-        driver.findElement(By.xpath("//button[contains(text(),'Purchase')]")).click();
+    @Then("{actor} Ingreso country y state")
+    public void ingresoCountryState(Actor actor) throws InterruptedException {
+        WebElement selectDrop = driver.findElement(By.xpath("//select[@id='input-payment-country']"));
+        Select dropDown = new Select(selectDrop);
+        dropDown.selectByValue("62");
+        Thread.sleep(1000);
+        WebElement selectDrop2 = driver.findElement(By.xpath("//select[@id='input-payment-zone']"));
+        Select dropDown2 = new Select(selectDrop2);
+        dropDown2.selectByValue("997");
+        Thread.sleep(1000);
+        driver.findElement(By.xpath("//input[@id='button-payment-address']")).click();
         Thread.sleep(1000);
     }
 
-    @Then("{actor} navigate demoblaze back")
-    public void navigateBack(Actor actor) throws InterruptedException {
-        driver.findElement(By.xpath("//button[contains(text(),'OK')]")).click();
+    @Then("{actor} delivery details")
+    public void deliveryDM(Actor actor) throws InterruptedException {
         Thread.sleep(1000);
-        driver.findElement(By.xpath("//a[contains(text(),'Home')]")).click();
+        driver.findElement(By.xpath("//input[@id='button-shipping-address']")).click();
+         Thread.sleep(1000);
+        driver.findElement(By.xpath("//body/div[@id='checkout-checkout']/div[1]/div[1]/div[1]/div[4]/div[2]/div[1]/p[4]/textarea[1]")).sendKeys("Terminando");
+        Thread.sleep(1000);
+        driver.findElement(By.xpath("//input[@id='button-shipping-method']")).click();
+        Thread.sleep(1000);
+        driver.findElement(By.xpath("//body/div[@id='checkout-checkout']/div[1]/div[1]/div[1]/div[5]/div[2]/div[1]/div[3]/div[1]/input[1]")).click();
+        Thread.sleep(1000);
+        driver.findElement(By.xpath("//input[@id='button-payment-method']")).click();
+
+    }
+
+    @Then("{actor} confirm order")
+    public void confirmOrder(Actor actor) throws InterruptedException {
+        Thread.sleep(1000);
+        driver.findElement(By.xpath("//input[@id='button-confirm']")).click();
         Thread.sleep(1000);
     }
+
+
 }
 
